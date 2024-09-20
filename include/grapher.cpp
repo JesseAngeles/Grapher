@@ -21,12 +21,9 @@ void grapher::drawAxes(float xMin, float yMin, float xMax, float yMax)
     xScale = static_cast<float>(this->width) / static_cast<float>(this->xMax - this->xMin);
     yScale = static_cast<float>(this->height) / static_cast<float>(this->yMax - this->yMin);
 
-    std::cout << "xScale:" << xScale << std::endl;
-    std::cout << "yScale:" << yScale << std::endl;
-
-    VertexArray xAxis;
-    VertexArray yAxis;
-    for (int x = 0, i = this->xMin; i < this->xMax; i++, x += xScale)
+    VertexArray xAxis(Lines, 2);
+    VertexArray yAxis(Lines, 2);
+    for (float x = 0, i = this->xMin; i < this->xMax; i++, x += xScale)
     {
         VertexArray line(Lines, 2);
         line[0].position = Vector2f(x, 0);
@@ -44,7 +41,7 @@ void grapher::drawAxes(float xMin, float yMin, float xMax, float yMax)
         this->axes.push_back(line);
     }
 
-    for (int y = 0, i = this->yMax; i > this->yMin; i--, y += yScale)
+    for (float y = 0, i = this->yMax; i > this->yMin; i--, y += yScale)
     {
         VertexArray line(Lines, 2);
         line[0].position = Vector2f(0, y);
@@ -103,12 +100,43 @@ void grapher::drawLine(float x1, float y1, float x2, float y2, Color color, bool
 
 void grapher::scale(float &x, float &y)
 {
-    x  = (x - this->xMin) * xScale;
+    x = (x - this->xMin) * xScale;
     y = (this->yMax - y) * yScale;
+}
+
+void ::grapher::drawCircle(float x, float y, float radius, Color color, bool isScaled)
+{
+    if (isScaled)
+        scale(x, y);
+    CircleShape circle(radius);
+    circle.setPosition(x - radius, y - radius);
+    circle.setFillColor(color);
+
+    this->circles.push_back(circle);
+}
+
+void grapher::drawRectangle(float width, float height, float x, float y, Color color, bool isScaled)
+{
+    if (isScaled)
+    {
+        scale(x, y);
+        width *= this->xScale;
+        height *= this->yScale;
+    }
+
+    RectangleShape rectangle(Vector2f(width, height));
+    rectangle.setPosition(x, y);
+    rectangle.setOutlineThickness(0);
+    rectangle.setFillColor(color);
+
+    this->rectangles.push_back(rectangle);
 }
 
 void grapher::draw()
 {
+
+    Clock clock;
+
     while (window.isOpen())
     {
         Event event;
@@ -118,14 +146,32 @@ void grapher::draw()
 
         window.clear(background);
 
-        for (const VertexArray &axis : axes)
-            window.draw(axis);
+        while (clock.getElapsedTime().asSeconds() >= 1.0f)
+        {
+            Vector2f position = circles[0].getPosition();
+            circles[0].setPosition(position.x += 12, position.y += 12);
+            clock.restart();
+        }
 
-        for (const Text &text : texts)
-            window.draw(text);
+        if (!axes.empty())
+            for (const VertexArray &axis : axes)
+                window.draw(axis);
 
-        for (const VertexArray &line : lines)
-            window.draw(line);
+        if (!texts.empty())
+            for (const Text &text : texts)
+                window.draw(text);
+
+        if (!lines.empty())
+            for (const VertexArray &line : lines)
+                window.draw(line);
+
+        if (!circles.empty())
+            for (const CircleShape &circle : circles)
+                window.draw(circle);
+
+        if (!rectangles.empty())
+            for (const RectangleShape &rectangle : rectangles)
+                window.draw(rectangle);
 
         window.display();
     }

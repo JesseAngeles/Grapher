@@ -16,7 +16,8 @@ public:
 
     void drawText(std::string content, int fontSize, float x, float y, Color color, bool isScaled);
     void drawLine(float x1, float y1, float x2, float y2, Color color, bool isScaled);
-
+    void drawCircle(float x, float y, float radius, Color color, bool isScaled);
+    void drawRectangle(float width, float height, float x, float y, Color color, bool isScaled);
     void draw();
 
 private:
@@ -28,7 +29,7 @@ private:
     RenderWindow window;
 
     // Limites
-    int xMin, yMin, xMax, yMax;
+    float xMin, yMin, xMax, yMax;
 
     // Escala
     float xScale, yScale;
@@ -41,8 +42,15 @@ private:
     std::vector<VertexArray> axes;
     std::vector<VertexArray> lines;
 
+    // Circulos
+    std::vector<CircleShape> circles;
+
+    // Rectangulos
+    std::vector<RectangleShape> rectangles;
+
     // Funciones
     void scale(float &x, float &y); // Escala el texto: factor de escala y rotacion del eje y
+
 };
 
 #endif // GRAPHER_H
