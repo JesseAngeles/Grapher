@@ -8,8 +8,16 @@ grapher::grapher(int width, int height, std::string name, Color background)
         std::cout << "Error loading font";
         return;
     }
-}
 
+    if (!backgroundTexture.loadFromFile("resources/images/background1.jpg"))
+    {
+        std::cout << "Error loading background";
+        return;
+    }
+
+    // Aplicar la textura al sprite
+    this->backgroundSprite.setTexture(backgroundTexture);
+}
 // Dibujar los ejes
 void grapher::drawAxes(float xMin, float yMin, float xMax, float yMax)
 {
@@ -144,14 +152,8 @@ void grapher::draw()
             if (event.type == Event::Closed)
                 window.close();
 
-        window.clear(background);
-
-        while (clock.getElapsedTime().asSeconds() >= 1.0f)
-        {
-            Vector2f position = circles[0].getPosition();
-            circles[0].setPosition(position.x += 12, position.y += 12);
-            clock.restart();
-        }
+        window.clear();
+        window.draw(backgroundSprite);
 
         if (!axes.empty())
             for (const VertexArray &axis : axes)

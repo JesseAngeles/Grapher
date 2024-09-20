@@ -28,6 +28,10 @@ private:
     Color background;
     RenderWindow window;
 
+    // Background
+    Texture backgroundTexture;
+    Sprite backgroundSprite;
+
     // Limites
     float xMin, yMin, xMax, yMax;
 
