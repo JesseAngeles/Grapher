@@ -1,1 +1,1 @@
-g++ src/main.cpp include/grapher.cpp -o build/main -Iinclude -lsfml-graphics -lsfml-window -lsfml-system
+g++ src/main.cpp include/grapher.cpp include/classes/Button.cpp -o build/main -Iinclude -lsfml-graphics -lsfml-window -lsfml-system

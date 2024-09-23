@@ -141,18 +141,25 @@ void grapher::draw()
     {
         Event event;
         while (window.pollEvent(event))
+        {
             if (event.type == Event::Closed)
                 window.close();
 
-        window.clear(background);
-
-        while (clock.getElapsedTime().asSeconds() >= 1.0f)
-        {
-            Vector2f position = circles[0].getPosition();
-            circles[0].setPosition(position.x += 12, position.y += 12);
-            clock.restart();
+            // Manejar el clic del botón
+            if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
+            {
+                sf::Vector2i mousePos(event.mouseButton.x, event.mouseButton.y);
+                // Probar clic del boton
+                if(!buttons.empty())
+                    for (Button &button : buttons)
+                        button.actionlistener(mousePos);
+            }
         }
 
+
+        window.clear(background);
+
+        // Dibujar elementos estaticos
         if (!axes.empty())
             for (const VertexArray &axis : axes)
                 window.draw(axis);
@@ -173,6 +180,10 @@ void grapher::draw()
             for (const RectangleShape &rectangle : rectangles)
                 window.draw(rectangle);
 
+        if(!buttons.empty())
+            for (Button &button : buttons)
+                button.draw(window);
+            
         window.display();
     }
 }

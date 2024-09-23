@@ -6,12 +6,14 @@
 #include <vector>
 #include <cmath>
 
+#include "./classes/Button.h"
+
 using namespace sf;
 
 class grapher
 {
 public:
-    grapher(int, int, std::string, Color background = {255, 255, 255});
+    grapher(int, int, std::string content, Color background = {255, 255, 255});
     void drawAxes(float xMin, float yMin, float xMax, float yMax);
 
     void drawText(std::string content, int fontSize, float x, float y, Color color, bool isScaled);
@@ -20,13 +22,19 @@ public:
     void drawRectangle(float width, float height, float x, float y, Color color, bool isScaled);
     void draw();
 
+    // Getters
+    Font getFont() const { return font; }
+    RenderWindow window;
+
+    // Setters
+    void insertButton(Button button) { buttons.push_back(button); }
+
 private:
     // Atributes
     int width;
     int height;
     std::string name;
     Color background;
-    RenderWindow window;
 
     // Limites
     float xMin, yMin, xMax, yMax;
@@ -48,9 +56,11 @@ private:
     // Rectangulos
     std::vector<RectangleShape> rectangles;
 
+    // Botones
+    std::vector<Button> buttons;
+
     // Funciones
     void scale(float &x, float &y); // Escala el texto: factor de escala y rotacion del eje y
-
 };
 
 #endif // GRAPHER_H
